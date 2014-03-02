@@ -56,7 +56,7 @@ Rename Pattern:
 	foreach (file; array(dirEntries(directory, recursion))) {
 		if (file.isDir())
 			continue;
-		auto match = matchFirst(file.name, regex);
+		auto match = matchFirst(baseName(file.name), regex);
 		if (!match.empty) {
 			string newName = buildPath(dirName(file.name), replaceFirst(baseName(file.name), regex, args[2]));
 			if (verbose || testing)
