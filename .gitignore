@@ -1,0 +1,5 @@
+*.exe
+*.visualdproj
+*.log
+Debug
+.dub
