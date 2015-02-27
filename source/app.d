@@ -64,6 +64,10 @@ Rename Pattern:
 				writefln("%s => %s", oldName, newName);
 			if (testing)
 				continue;
+			if (exists(absolutePath(newName))) {
+				writefln("Skipping %s, %s exists", absolutePath(oldName), absolutePath(newName));
+				continue;
+			}
 
 			rename(absolutePath(oldName), absolutePath(newName));
 		}
