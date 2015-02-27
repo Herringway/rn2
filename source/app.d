@@ -10,7 +10,7 @@ int main(string[] args)
 	bool testing = false;
 	bool verbose = false;
 	bool ignoreCase = false;
-	string directory = ".";
+	string directory = getcwd();
 	bool recursive = false;
 	void printUsage() {
 		stderr.writefln(r"Usage: %s [options] matchpattern renamepattern
@@ -53,17 +53,19 @@ Rename Pattern:
 	if (ignoreCase)
 		flags ~= "i";
 	auto regex = regex(args[1], flags);
-	foreach (file; array(dirEntries(directory, recursion))) {
+	foreach (file; dirEntries(directory, recursion)) {
+		string oldName = relativePath(file.name, directory);
 		if (file.isDir())
 			continue;
-		auto match = matchFirst(baseName(file.name), regex);
+		auto match = matchFirst(oldName, regex);
 		if (!match.empty) {
-			string newName = buildPath(dirName(file.name), replaceFirst(baseName(file.name), regex, args[2]));
+			string newName = buildPath(replaceFirst(oldName, regex, args[2]));
 			if (verbose || testing)
-				writefln("%s => %s", file.name, newName);
+				writefln("%s => %s", oldName, newName);
 			if (testing)
 				continue;
-			rename(file.name, newName);
+
+			rename(absolutePath(oldName), absolutePath(newName));
 		}
 	}
 	return 0;
