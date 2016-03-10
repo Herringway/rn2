@@ -12,6 +12,7 @@ int main(string[] args)
 	bool ignoreCase = false;
 	string directory = getcwd();
 	bool recursive = false;
+	bool makeDirs = false;
 	void printUsage() {
 		stderr.writefln(r"Usage: %s [options] matchpattern renamepattern
 
@@ -19,6 +20,7 @@ Options:
   --directory, -d: Set default directory
   --help,      -h: Print this help
   --ignorecase,-i: Regex is case insensitive
+  --mkdir,     -m: Create directories where necessary
   --recursive, -r: Descend into child directories
   --test,      -t: Don't rename, only print what would happen
   --verbose,   -v: Print extra information
@@ -41,6 +43,7 @@ Rename Pattern:
 			   "ignorecase|i", &ignoreCase,
 			   "directory|d", &directory,
 			   "recursive|r", &recursive,
+			   "mkdir|m", &makeDirs,
 			   "help|h", &printUsage);
 		if (args.length < 3) {
 			printUsage();
@@ -68,6 +71,9 @@ Rename Pattern:
 				writefln("Skipping %s, %s exists", absolutePath(oldName), absolutePath(newName));
 				continue;
 			}
+			if (!exists(dirName(absolutePath(newName))))
+				if (makeDirs)
+					mkdirRecurse(dirName(absolutePath(newName)));
 
 			rename(absolutePath(oldName), absolutePath(newName));
 		}
