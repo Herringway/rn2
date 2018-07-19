@@ -3,3 +3,4 @@
 *.log
 Debug
 .dub
+dub.selections.json
